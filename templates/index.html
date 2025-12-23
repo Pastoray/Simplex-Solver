@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simplex Solver Web</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f9f9f9; }
+        h1 { color: #2c3e50; }
+        form { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        label { display: block; margin-top: 10px; font-weight: bold; }
+        input, textarea, select { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
+        textarea { height: 100px; font-family: monospace; }
+        button { background: #3498db; color: white; padding: 10px 20px; border: none; border-radius: 4px; margin-top: 15px; cursor: pointer; }
+        button:hover { background: #2980b9; }
+        .result { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-top: 20px; }
+        .tableau { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        .tableau th, .tableau td { border: 1px solid #ddd; padding: 6px; text-align: right; }
+        .tableau th { background: #ecf0f1; }
+        .pivot-col { background-color: #d5f5e3 !important; }
+        .pivot-row { background-color: #d5f5e3 !important; }
+        .pivot-elem { background-color: #fdebd0 !important; }
+        .final-solution { background: #e8f4f8; padding: 15px; border-left: 4px solid #3498db; margin-top: 20px; }
+        pre { background: #eee; padding: 10px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Simplex LP Solver</h1>
+  <form method="POST">
+      <label for="objective">Objective Function:</label>
+      <textarea name="objective" id="objective" required placeholder="max 4*x1 + x2 - 2*x3">{{ request.form.objective or 'max 3*x1 + 2*x2' }}</textarea>
+
+      <label for="constraints">Constraints (one per line):</label>
+      <textarea name="constraints" id="constraints" required placeholder="x1 + x2 &lt;= 4&#10;2*x1 + x2 &lt;= 6">{{ request.form.constraints or 'x1 + x2 <= 4\n2*x1 + x2 <= 6' }}</textarea>
+
+      <label for="method">Method:</label>
+      <select name="method" id="method">
+          <option value="regular" {% if request.form.method == 'regular' %}selected{% endif %}>Regular Simplex</option>
+      </select>
+
+      <button type="submit">Solve LP</button>
+  </form>
+    <!-- <form method="POST">
+        <label for="c">Objective coefficients (Cj):</label>
+        <input type="text" name="c" id="c" required value="{{ request.form.c or '3 2' }}">
+
+        <label for="A">Constraint matrix A (one row per line):</label>
+        <textarea name="A" id="A" required>{{ request.form.A or '1 1\n2 1' }}</textarea>
+
+        <label for="b">RHS vector (b):</label>
+        <input type="text" name="b" id="b" required value="{{ request.form.b or '4 6' }}">
+
+        <label for="method">Method:</label>
+        <select name="method" id="method">
+            <option value="regular" {% if request.form.method == 'regular' %}selected{% endif %}>Regular Simplex</option>
+            <option value="two_phase" {% if request.form.method == 'two_phase' %}selected{% endif %}>Two-Phase</option>
+            <option value="big_m" {% if request.form.method == 'big_m' %}selected{% endif %}>Big-M</option>
+            <option value="dual" {% if request.form.method == 'dual' %}selected{% endif %}>Dual Simplex</option>
+        </select>
+
+        <div id="m-input-container">
+            <label for="M">Big-M value:</label>
+            <input type="number" name="M" id="M" value="{{ request.form.M or '1000' }}" step="100">
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const methodSelect = document.getElementById('method');
+                const mContainer = document.getElementById('m-input-container');
+
+                function toggleMInput() {
+                    if (methodSelect.value === 'big_m') {
+                        mContainer.style.display = 'block';
+                    } else {
+                        mContainer.style.display = 'none';
+                    }
+                }
+
+                toggleMInput();
+
+                methodSelect.addEventListener('change', toggleMInput);
+            });
+        </script>
+
+        <button type="submit">Solve LP</button>
+    </form>-->
+
+    {% if result %}
+    <div class="result">
+        <h2>Result</h2>
+        {{ result|safe }}
+    </div>
+    {% endif %}
+</body>
+</html>
