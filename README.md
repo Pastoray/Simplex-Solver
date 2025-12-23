@@ -1,7 +1,7 @@
 # Linear Programming Simplex Solver
 ## Requirements
-Python 3.7+
-pip
+- Python 3.7+
+- pip
 
 ## How to Run
 ### Use Precompiled Preview
